@@ -57,8 +57,12 @@ IID=${BASE%.tar.gz}
 
 mkdir -p "/tmp/${IID}"
 
-FILES="$(tar -tf $INFILE | grep -e "/busybox\$") "
-FILES+="$(tar -tf $INFILE | grep -E "/sbin/[[:alpha:]]+")"
+{
+    FILES="$(tar -tf $INFILE | grep -e "/busybox\$") "
+    FILES+="$(tar -tf $INFILE | grep -E "/sbin/[[:alpha:]]+")"
+} || {
+    FILES="$(tar -tf $INFILE | grep -E "/sbin/[[:alpha:]]+")"
+}
 for TARGET in ${FILES}
 do
     SKIP=$(echo "${TARGET}" | fgrep -o / | wc -l)
